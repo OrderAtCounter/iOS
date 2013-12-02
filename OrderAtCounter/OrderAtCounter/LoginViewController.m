@@ -150,34 +150,34 @@
 
 - (void)proceedWithLogin
 {
-    if([sharedRepository.deviceType isEqualToString:@"iPhone 5"])//@"iPhone Simulator"])
+//    if([sharedRepository.deviceType isEqualToString:@"iPhone 5"])//@"iPhone Simulator"])
+//    {
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
+    
+    UINavigationController *navController = [storyboard  instantiateViewControllerWithIdentifier:@"menuNavigationController"];
+    
+    NSArray *version = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
+    if ([[version objectAtIndex:0] intValue] >= 7)
     {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
-        
-        UINavigationController *navController = [storyboard  instantiateViewControllerWithIdentifier:@"menuNavigationController"];
-        
-        NSArray *version = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
-        if ([[version objectAtIndex:0] intValue] >= 7)
-        {
-            [navController.navigationBar setBarTintColor:sharedRepository.greenColor];
-            [navController.navigationBar setTranslucent:NO];
-            [navController.navigationBar setTintColor:[UIColor whiteColor]];
-        }
-        else
-        {
-            [navController.navigationBar setTintColor:sharedRepository.greenColor];
-        }
-        
-        [UIApplication sharedApplication].delegate.window.rootViewController = navController;
+        [navController.navigationBar setBarTintColor:sharedRepository.greenColor];
+        [navController.navigationBar setTranslucent:NO];
+        [navController.navigationBar setTintColor:[UIColor whiteColor]];
     }
-    else // [deviceType isEqualToString:@"iPad Simulator"]
+    else
     {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:nil];
-        
-        UINavigationController *navController = [storyboard instantiateViewControllerWithIdentifier:@"mainNavController"];
-        
-        [UIApplication sharedApplication].delegate.window.rootViewController = navController;
+        [navController.navigationBar setTintColor:sharedRepository.greenColor];
     }
+    
+    [UIApplication sharedApplication].delegate.window.rootViewController = navController;
+//    }
+//    else // [deviceType isEqualToString:@"iPad Simulator"]
+//    {
+//        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:nil];
+//        
+//        UINavigationController *navController = [storyboard instantiateViewControllerWithIdentifier:@"mainNavController"];
+//        
+//        [UIApplication sharedApplication].delegate.window.rootViewController = navController;
+//    }
 }
 
 - (void)indicateLoginAttemptFailure:(NSString *)errorString
