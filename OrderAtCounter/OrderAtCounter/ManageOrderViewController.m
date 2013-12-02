@@ -144,8 +144,30 @@
     }
     else if(indexPath.row == 2)
     {
+        if(isEditMode)
+        {
+            cell.isEditMode = TRUE;
+        }
+        else
+        {
+            cell.isEditMode = FALSE;
+        }
+        
         cell.detailLabel.text = @"Text Message";
-        cell.valueLabel.text = @"Your order is ready!";
+        
+        NSString *customMessage = order.customTextMessage;
+        
+        cell.editValueTextField.keyboardType = UIKeyboardTypeAlphabet;
+        if(customMessage == nil)
+        {
+            cell.valueLabel.text = sharedRepository.defaultTextMessageString;
+            cell.editValueTextField.text = sharedRepository.defaultTextMessageString;
+        }
+        else
+        {
+            cell.valueLabel.text = order.customTextMessage;
+            cell.editValueTextField.text = order.customTextMessage;
+        }
     }
     
     return cell;
@@ -189,12 +211,14 @@
     
     NSString *editedPhoneNumber = ((OrderDetailCell *)[orderDetailsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]]).editValueTextField.text;
     
+    NSString *editedTextMessage = ((OrderDetailCell *)[orderDetailsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]]).editValueTextField.text;
+    
     NSDictionary *editsCredentials = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       sharedRepository.userEmail, @"email",
                                       sharedRepository.sessionID, @"sessionId",
                                       editedPhoneNumber, @"phoneNumber",
                                       editOrderNumberTextField.text, @"orderNumber",
-                                      @"Your order is ready!", @"message",
+                                      editedTextMessage, @"message",
                                      nil];
     
     [saveEditsManager generatePostRequestAtRoute:sharedRepository.updateOrderURL withJSONBodyData:editsCredentials];
@@ -227,6 +251,11 @@
                            
                        }
                    });
+    
+    if(![editedTextMessage isEqualToString:sharedRepository.defaultTextMessageString])
+    {
+        order.customTextMessage = editedTextMessage;
+    }
     
     [self refreshUIForNonEditMode];
 }
@@ -265,8 +294,6 @@
                            
                        }
                        
-                       [sharedRepository.activeOrdersArray removeObject:order];
-                       
                        if(cancelOrderManager.responseStatusCode == 200)
                        {
                            
@@ -281,6 +308,8 @@
                            
                        }
                    });
+    
+    [sharedRepository.activeOrdersArray removeObject:order];
     
     [self.navigationController popViewControllerAnimated:YES];
 }

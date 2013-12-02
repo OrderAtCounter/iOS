@@ -6,11 +6,11 @@
 //  Copyright (c) 2013 KRL. All rights reserved.
 //
 
-#import "MenuTableViewController.h"
+#import "MainMenuTableViewController.h"
 #import "DataHold.h"
 #import "WebServiceManager.h"
 
-@implementation MenuTableViewController
+@implementation MainMenuTableViewController
 
 - (void)viewDidLoad
 {
@@ -18,13 +18,19 @@
     
     self.tableView.tableFooterView = [UIView new];
     
-    // Update Active Orders
-    WebServiceManager *updateActiveAndFulfilledOrdersManager = [[WebServiceManager alloc] init];
-    [updateActiveAndFulfilledOrdersManager updateActiveOrders];
-    //[updateActiveAndFulfilledOrdersManager updateOrdersHistory];
+    [self initializeLocalDatabaseFromExternalRepository];
 }
 
-#pragma mark - Table view data source
+- (void)initializeLocalDatabaseFromExternalRepository
+{
+    //WebServiceManager *activeOrdersManager = [[WebServiceManager alloc] init];
+    //WebServiceManager *orderHistoryManager = [[WebServiceManager alloc] init];
+    //WebServiceManager *defaultTextMessageManager = [[WebServiceManager alloc] init];
+    
+    //[activeOrdersManager updateActiveOrders];
+    //[orderHistoryManager updateOrdersHistory];
+    //[defaultTextMessageManager retrieveDefaultTextMessage];
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {

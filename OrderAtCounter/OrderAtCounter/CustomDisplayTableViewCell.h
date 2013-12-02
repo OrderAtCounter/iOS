@@ -20,4 +20,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *phoneNumberLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timePlacementLabel;
 
+@property (weak, nonatomic) IBOutlet UIButton *sendTextButton;
+
 @end

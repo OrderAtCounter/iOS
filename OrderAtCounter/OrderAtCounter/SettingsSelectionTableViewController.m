@@ -16,7 +16,7 @@
 
 @implementation SettingsSelectionTableViewController
 {
-    DataHold *sharedrepository;
+    DataHold *sharedRepository;
 }
 
 @synthesize settingsTableView;
@@ -26,7 +26,7 @@
 {
     [super viewDidLoad];
     
-    sharedrepository = [[DataHold alloc] init];
+    sharedRepository = [[DataHold alloc] init];
     
     settingsTableView.tableFooterView = [UIView new];
     
@@ -52,15 +52,14 @@
 
 - (void)updateCustomTextMessage
 {
-    
     WebServiceManager *textMessageManager = [[WebServiceManager alloc] init];
     
     NSDictionary *textMessageCredentials = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                           sharedrepository.userEmail, @"email",
-                                           sharedrepository.sessionID, @"sessionId",
+                                           sharedRepository.userEmail, @"email",
+                                           sharedRepository.sessionID, @"sessionId",
                                            nil];
     
-    [textMessageManager generatePostRequestAtRoute:sharedrepository.getTextMessageURL withJSONBodyData:textMessageCredentials];
+    [textMessageManager generatePostRequestAtRoute:sharedRepository.getTextMessageURL withJSONBodyData:textMessageCredentials];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
                    ^{
@@ -72,7 +71,7 @@
                        NSString *responseString = textMessageManager.responseString;
                        if(textMessageManager.responseStatusCode == 200)
                        {
-                           NSLog(@"Response: %@", responseString);
+                           sharedRepository.defaultTextMessageString = [responseString substringWithRange:NSMakeRange(12, responseString.length - 14)];
                        }
                        else
                        {

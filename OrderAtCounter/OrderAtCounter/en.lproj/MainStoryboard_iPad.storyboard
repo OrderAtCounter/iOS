@@ -9,6 +9,7 @@
         <!--Login View Controller-->
         <scene sceneID="4">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="iPadLoginView" id="2" customClass="LoginViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5">
                         <rect key="frame" x="0.0" y="20" width="1024" height="748"/>
@@ -53,7 +54,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                                 <connections>
-                                    <outletCollection property="gestureRecognizers" destination="TRN-2R-VV6" appends="YES" id="L5r-mQ-HAU"/>
+                                    <outletCollection property="gestureRecognizers" destination="o4o-ru-2hn" appends="YES" id="cyy-yM-wMt"/>
                                 </connections>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="rounded_table_cell_bottom.png" translatesAutoresizingMaskIntoConstraints="NO" id="BBX-zL-SUW">
@@ -76,6 +77,7 @@
                             </textField>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Password" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GX6-f9-Vuc">
                                 <rect key="frame" x="623" y="362" width="75" height="21"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="75" id="pHt-1S-j5Z"/>
                                     <constraint firstAttribute="height" constant="21" id="rb4-tX-UED"/>
@@ -83,6 +85,9 @@
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="N8T-X1-YMg" appends="YES" id="gQa-Bv-Jnf"/>
+                                </connections>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ytt-cr-PH7">
                                 <rect key="frame" x="610" y="400" width="280" height="44"/>
@@ -120,11 +125,18 @@
                                     <constraint firstAttribute="height" constant="75" id="kN5-20-axv"/>
                                 </constraints>
                             </imageView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="5E4-q7-17K">
+                                <rect key="frame" x="740" y="340" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="color" red="1" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="BBX-zL-SUW" firstAttribute="top" secondItem="5" secondAttribute="top" constant="350" id="0FI-aF-ueZ"/>
                             <constraint firstItem="GX6-f9-Vuc" firstAttribute="centerX" secondItem="Hio-kx-f1W" secondAttribute="centerX" type="default" id="0RH-XN-azN"/>
+                            <constraint firstItem="5E4-q7-17K" firstAttribute="centerY" secondItem="uGt-Um-rfW" secondAttribute="centerY" type="default" id="3MG-iP-5vJ"/>
                             <constraint firstAttribute="bottom" secondItem="ywL-TA-I3x" secondAttribute="bottom" constant="50" id="4EM-wq-blK"/>
                             <constraint firstItem="vtP-nu-hNw" firstAttribute="centerY" secondItem="BBX-zL-SUW" secondAttribute="centerY" type="default" id="5hY-WZ-1bU"/>
                             <constraint firstItem="vtP-nu-hNw" firstAttribute="trailing" secondItem="lHh-Uj-oaU" secondAttribute="trailing" type="default" id="5nn-yv-buT"/>
@@ -133,40 +145,44 @@
                             <constraint firstAttribute="trailing" secondItem="Hio-kx-f1W" secondAttribute="trailing" constant="324" id="C6F-3S-6Nw"/>
                             <constraint firstAttribute="bottom" secondItem="Ytt-cr-PH7" secondAttribute="bottom" constant="304" id="Ctn-lN-BEF"/>
                             <constraint firstItem="t9d-Ef-7ca" firstAttribute="centerX" secondItem="ywL-TA-I3x" secondAttribute="centerX" type="default" id="Ghm-aO-6wH"/>
-                            <constraint firstItem="Hio-kx-f1W" firstAttribute="centerY" secondItem="rfa-NQ-6MK" secondAttribute="centerY" type="default" id="I8e-4r-ofq"/>
                             <constraint firstItem="ywL-TA-I3x" firstAttribute="top" secondItem="t9d-Ef-7ca" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="IBi-Zf-rgr"/>
+                            <constraint firstItem="5E4-q7-17K" firstAttribute="top" secondItem="5" secondAttribute="top" constant="340" id="IGM-cg-kE5"/>
                             <constraint firstItem="Hio-kx-f1W" firstAttribute="centerY" secondItem="lHh-Uj-oaU" secondAttribute="centerY" type="default" id="IvN-mm-n2C"/>
                             <constraint firstItem="BBX-zL-SUW" firstAttribute="trailing" secondItem="rfa-NQ-6MK" secondAttribute="trailing" type="default" id="OgQ-vJ-Mhe"/>
                             <constraint firstItem="GX6-f9-Vuc" firstAttribute="centerY" secondItem="vtP-nu-hNw" secondAttribute="centerY" type="default" id="Rbs-5e-bxg"/>
                             <constraint firstItem="kdW-jG-uvZ" firstAttribute="leading" secondItem="ywL-TA-I3x" secondAttribute="leading" type="default" id="Wv2-Ha-67v"/>
                             <constraint firstAttribute="trailing" secondItem="lHh-Uj-oaU" secondAttribute="trailing" constant="149" id="XI8-x2-KeM"/>
                             <constraint firstAttribute="trailing" secondItem="rfa-NQ-6MK" secondAttribute="trailing" constant="134" id="Xe8-O9-HlT"/>
-                            <constraint firstItem="lHh-Uj-oaU" firstAttribute="top" secondItem="5" secondAttribute="top" constant="313" id="Y6p-D2-lgW"/>
-                            <constraint firstItem="vtP-nu-hNw" firstAttribute="top" secondItem="5" secondAttribute="top" constant="357" id="ay5-WP-Sme"/>
                             <constraint firstItem="kdW-jG-uvZ" firstAttribute="top" secondItem="5" secondAttribute="top" constant="50" id="cKm-u7-CTz"/>
+                            <constraint firstItem="5E4-q7-17K" firstAttribute="centerX" secondItem="rfa-NQ-6MK" secondAttribute="centerX" type="default" id="f3x-35-0dD"/>
+                            <constraint firstItem="rfa-NQ-6MK" firstAttribute="centerY" secondItem="lHh-Uj-oaU" secondAttribute="centerY" type="default" id="hfh-uH-Njc"/>
                             <constraint firstItem="BBX-zL-SUW" firstAttribute="leading" secondItem="rfa-NQ-6MK" secondAttribute="leading" type="default" id="hkU-dW-fJ7"/>
                             <constraint firstItem="BBX-zL-SUW" firstAttribute="trailing" secondItem="Ytt-cr-PH7" secondAttribute="trailing" type="default" id="rS5-Uf-po9"/>
                             <constraint firstItem="ywL-TA-I3x" firstAttribute="leading" secondItem="5" secondAttribute="leading" type="default" id="xJI-9h-uYB"/>
-                            <constraint firstItem="uGt-Um-rfW" firstAttribute="top" secondItem="5" secondAttribute="top" constant="300" id="xaF-Hj-9VD"/>
+                            <constraint firstItem="rfa-NQ-6MK" firstAttribute="top" secondItem="5" secondAttribute="top" constant="306" id="yJU-pt-j11"/>
                             <constraint firstItem="uGt-Um-rfW" firstAttribute="leading" secondItem="5" secondAttribute="leading" constant="78" id="ygs-g9-eX9"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="JIT-cg-Lfl" appends="YES" id="Qiu-85-PSn"/>
-                        </connections>
                     </view>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
                         <outlet property="customerLogoImageView" destination="uGt-Um-rfW" id="xVD-qK-kZj"/>
                         <outlet property="emailTextField" destination="lHh-Uj-oaU" id="6g2-dA-Y1X"/>
-                        <outlet property="loginActivityIndicator" destination="t9d-Ef-7ca" id="mlU-oh-kLz"/>
+                        <outlet property="loginActivityIndicator" destination="5E4-q7-17K" id="XfF-Vx-zT6"/>
                         <outlet property="loginButton" destination="Ytt-cr-PH7" id="u9q-er-rM7"/>
                         <outlet property="passwordTextField" destination="vtP-nu-hNw" id="5M9-XF-zSK"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="TRN-2R-VV6"/>
-                <tapGestureRecognizer id="JIT-cg-Lfl"/>
+                <tapGestureRecognizer id="o4o-ru-2hn">
+                    <connections>
+                        <action selector="emailGestureRecognizerTapped:" destination="2" id="2DB-Tb-Pek"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="N8T-X1-YMg">
+                    <connections>
+                        <action selector="passwordGestureRecognizerTapped:" destination="2" id="dSL-V1-rT0"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-1655" y="-205"/>
         </scene>

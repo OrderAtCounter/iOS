@@ -8,6 +8,7 @@
 
 #import "NewOrderTableViewController.h"
 #import "DataHold.h"
+#import "UserOrder.h"
 #import "WebServiceManager.h"
 
 @interface NewOrderTableViewController ()
@@ -123,6 +124,13 @@
                            [self indicateOrderPlacementAttemptFailure:responseString];
                        }
                    });
+    
+    UserOrder *newOrder = [[UserOrder alloc] init];
+    newOrder.orderNumber = orderNumberTextField.text;
+    newOrder.customerPhoneNumber = phoneNumberTextField.text;
+    newOrder.placementTime = @"Just Now";
+    
+    [sharedRepository.activeOrdersArray addObject:newOrder];
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }

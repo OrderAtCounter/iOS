@@ -34,6 +34,8 @@
     
     displayOrdersArray = [[NSMutableArray alloc] init];
     
+    [self recolorStatusAndNavigatioNBars];
+    
     [self resetDisplayOrdersArrayToRetrievedData];
     
     exteriorTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissSearchBarKeyboard)];
@@ -65,8 +67,8 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [self recolorStatusAndNavigatioNBars];
     [self initializeActiveOrderUpdateTimer];
+    [self resetDisplayOrdersArrayToRetrievedData];
     [self updateActiveOrdersTableView];
 }
 
@@ -112,10 +114,18 @@
                            {
                                [self resetDisplayOrdersArrayToRetrievedData];
                                
-                               [self performSelectorOnMainThread:@selector(updateActiveOrdersTableView) withObject:nil waitUntilDone:NO];
+                               if(!activeOrdersSearchBar.isFirstResponder)
+                               {
+                                   [self performSelectorOnMainThread:@selector(updateActiveOrdersTableView) withObject:nil waitUntilDone:NO];
+                               }
                            }
                        }
                    });
+}
+
+- (void)connectionHasCompletedAlert
+{
+    
 }
 
 - (void)resetDisplayOrdersArrayToRetrievedData
@@ -179,6 +189,12 @@
         {
             cell = [[CustomDisplayTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"OrderExpandedCell"];
         }
+        
+        cell.sendTextButton.enabled = TRUE;
+        if(order.orderId == nil)
+        {
+            cell.sendTextButton.enabled = FALSE;
+        }
 
         cell.order = order;
 
@@ -199,7 +215,7 @@
 
 - (void)updateActiveOrdersTableView
 {
-    if([displayOrdersArray count] == 0)
+    if([sharedRepository.activeOrdersArray count] == 0)
     {
         [self adjustViewForEmptyTableView];
     }
@@ -218,7 +234,9 @@
 //    
 //    NSIndexPath *index = [[activeOrdersTableView indexPathsForVisibleRows] objectAtIndex:0];
 //    NSLog(@"Row: %d", index.row);
-//    [activeOrdersTableView reloadData];
+    
+    [activeOrdersTableView reloadData];
+    
 //    [activeOrdersTableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
@@ -270,6 +288,8 @@
                        [self updateActiveOrdersTableView];
                    });
     
+    [sharedRepository.activeOrdersArray removeObject:orderToFulfill];
+    
     [self updateActiveOrdersTableView];
 }
 
@@ -284,7 +304,9 @@
     for(UserOrder *x in sharedRepository.activeOrdersArray)
     {
         BOOL containsOrderNumber = [x.orderNumber rangeOfString:searchText].location != NSNotFound;
-        BOOL containsPhoneNumber = [x.customerPhoneNumber rangeOfString:searchText].location != NSNotFound;
+        BOOL containsPhoneNumber = [[x.customerPhoneNumber stringByReplacingOccurrencesOfString:@"-" withString:@""] rangeOfString:searchText].location != NSNotFound;
+        
+        NSLog(@"%@", x.customerPhoneNumber);
         
         if([searchText isEqualToString:@""] || containsOrderNumber || containsPhoneNumber)
         {
@@ -303,6 +325,7 @@
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
 {
+    [self updateActiveOrdersTableView];
     [self dismissSearchBarKeyboard];
 }
 

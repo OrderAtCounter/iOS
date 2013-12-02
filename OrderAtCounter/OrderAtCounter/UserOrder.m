@@ -12,7 +12,7 @@
 
 @implementation UserOrder
 
-@synthesize orderNumber, orderId, customerPhoneNumber, placementTime, orderFulfilled;
+@synthesize orderNumber, orderId, customerPhoneNumber, placementTime, orderFulfilled, customTextMessage;
 
 - (id)initWithRandomData
 {

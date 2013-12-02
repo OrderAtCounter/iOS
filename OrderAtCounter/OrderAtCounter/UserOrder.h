@@ -14,10 +14,11 @@
     NSString *orderId;
     NSString *customerPhoneNumber;
     NSString *placementTime;
+    NSString *customTextMessage;
     BOOL orderFulfilled;
 }
 
-@property NSString *orderNumber, *orderId, *customerPhoneNumber, *placementTime;
+@property NSString *orderNumber, *orderId, *customerPhoneNumber, *placementTime, *customTextMessage;
 @property BOOL orderFulfilled;
 
 

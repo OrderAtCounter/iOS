@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1A10C672180FE37300256025 /* MenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A10C671180FE37300256025 /* MenuTableViewController.m */; };
+		1A10C672180FE37300256025 /* MainMenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A10C671180FE37300256025 /* MainMenuTableViewController.m */; };
 		1A1AA878183E275500EEC517 /* NewOrderTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1AA877183E275500EEC517 /* NewOrderTableViewController.m */; };
 		1A1AA87B183E2D9500EEC517 /* DefaultTextMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1AA87A183E2D9500EEC517 /* DefaultTextMessageViewController.m */; };
 		1A1AA87F183E32CC00EEC517 /* SettingsSelectionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1AA87E183E32CC00EEC517 /* SettingsSelectionTableViewController.m */; };
@@ -23,6 +23,7 @@
 		1A8BB48D184B3E830098828C /* OrderDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A8BB48C184B3E830098828C /* OrderDetailCell.m */; };
 		1AA34D55184C5D980037C45A /* MontserratBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AA34D53184C5D980037C45A /* MontserratBold.ttf */; };
 		1AA34D56184C5D980037C45A /* MontserratRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AA34D54184C5D980037C45A /* MontserratRegular.ttf */; };
+		1AA34D58184C95730037C45A /* big-message-red.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AA34D57184C95730037C45A /* big-message-red.png */; };
 		1AB46E4017EAC477003AD29E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AB46E3F17EAC477003AD29E /* UIKit.framework */; };
 		1AB46E4217EAC477003AD29E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AB46E4117EAC477003AD29E /* Foundation.framework */; };
 		1AB46E4417EAC477003AD29E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AB46E4317EAC477003AD29E /* CoreGraphics.framework */; };
@@ -82,8 +83,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1A10C670180FE37300256025 /* MenuTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuTableViewController.h; sourceTree = "<group>"; };
-		1A10C671180FE37300256025 /* MenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuTableViewController.m; sourceTree = "<group>"; };
+		1A10C670180FE37300256025 /* MainMenuTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainMenuTableViewController.h; sourceTree = "<group>"; };
+		1A10C671180FE37300256025 /* MainMenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainMenuTableViewController.m; sourceTree = "<group>"; };
 		1A1AA876183E275500EEC517 /* NewOrderTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewOrderTableViewController.h; sourceTree = "<group>"; };
 		1A1AA877183E275500EEC517 /* NewOrderTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewOrderTableViewController.m; sourceTree = "<group>"; };
 		1A1AA879183E2D9500EEC517 /* DefaultTextMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultTextMessageViewController.h; sourceTree = "<group>"; };
@@ -105,6 +106,7 @@
 		1A8BB48C184B3E830098828C /* OrderDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrderDetailCell.m; sourceTree = "<group>"; };
 		1AA34D53184C5D980037C45A /* MontserratBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MontserratBold.ttf; sourceTree = "<group>"; };
 		1AA34D54184C5D980037C45A /* MontserratRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MontserratRegular.ttf; sourceTree = "<group>"; };
+		1AA34D57184C95730037C45A /* big-message-red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "big-message-red.png"; sourceTree = "<group>"; };
 		1AB46E3C17EAC477003AD29E /* Ready.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ready.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AB46E3F17EAC477003AD29E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1AB46E4117EAC477003AD29E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -281,6 +283,7 @@
 			children = (
 				1A1AA880184286B100EEC517 /* big-add.png */,
 				1A1AA881184286B100EEC517 /* big-message.png */,
+				1AA34D57184C95730037C45A /* big-message-red.png */,
 				1A1AA885184286B100EEC517 /* menu.png */,
 				1A1AA886184286B100EEC517 /* plus.png */,
 			);
@@ -399,8 +402,8 @@
 			children = (
 				1AB46E7217EAD7F0003AD29E /* LoginViewController.h */,
 				1AB46E7317EAD7F0003AD29E /* LoginViewController.m */,
-				1A10C670180FE37300256025 /* MenuTableViewController.h */,
-				1A10C671180FE37300256025 /* MenuTableViewController.m */,
+				1A10C670180FE37300256025 /* MainMenuTableViewController.h */,
+				1A10C671180FE37300256025 /* MainMenuTableViewController.m */,
 				1AEE0162184C431200FA0684 /* KioskMode */,
 				1A8BB467184AB0A20098828C /* Active Orders */,
 				1A8BB46A184AB0B60098828C /* Analytics */,
@@ -529,6 +532,7 @@
 				1AEE0150184C321A00FA0684 /* 3.png in Resources */,
 				1A1AA893184505F500EEC517 /* Launch-Icon.png in Resources */,
 				1AEE0139184C095B00FA0684 /* msg-white.png in Resources */,
+				1AA34D58184C95730037C45A /* big-message-red.png in Resources */,
 				1AEE0153184C321A00FA0684 /* 6.png in Resources */,
 				1AEE013D184C098300FA0684 /* little-message.png in Resources */,
 				1AB46E5417EAC477003AD29E /* Default@2x.png in Resources */,
@@ -592,7 +596,7 @@
 				1AE6E2FC17F390DD004BF4F3 /* UserOrder.m in Sources */,
 				1AE6E30317F3A629004BF4F3 /* CustomDisplayTableViewCell.m in Sources */,
 				1A8BB48D184B3E830098828C /* OrderDetailCell.m in Sources */,
-				1A10C672180FE37300256025 /* MenuTableViewController.m in Sources */,
+				1A10C672180FE37300256025 /* MainMenuTableViewController.m in Sources */,
 				1A1AA87B183E2D9500EEC517 /* DefaultTextMessageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

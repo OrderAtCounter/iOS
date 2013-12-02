@@ -10,9 +10,9 @@
 
 @interface DefaultTextMessageViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UITextView *customMessageTextView;
+
 - (IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)saveButtonPressed:(id)sender;
-
-
 
 @end

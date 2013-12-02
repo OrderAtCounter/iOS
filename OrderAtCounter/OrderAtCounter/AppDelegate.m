@@ -14,6 +14,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
     DataHold *sharedRepository = [[DataHold alloc] init];
     
     sharedRepository.deviceType = [UIDevice currentDevice].model;
@@ -30,24 +32,12 @@
     sharedRepository.getHistoryURL = @"iOSGetHistory";
     sharedRepository.deleteOrderURL = @"iOSDeleteOrder";                    // (email, sessionId, orderId)
     sharedRepository.updateOrderURL = @"iOSUpdateOrder";                    // (email, sessionId, phoneNumber, orderNumber, message)
+    
     sharedRepository.activeOrdersArray = [[NSMutableArray alloc] init];
+    sharedRepository.ordersHistoryArray = [[NSMutableArray alloc] init];
     
     sharedRepository.greenColor = [UIColor colorWithRed:113.0/255.0f green:194.0/255.0f blue:179.0/255.0f alpha:1.0f];
     sharedRepository.redColor = [UIColor colorWithRed:239.0/255.0f green:73.0/255.0f blue:58.0/255.0f alpha:1.0f];
-    
-    sharedRepository.debugModeActive = TRUE;
-    
-//    UserOrder *fakeOrder1 = [[UserOrder alloc] init];
-//    UserOrder *fakeOrder2 = [[UserOrder alloc] init];
-//    UserOrder *fakeOrder3 = [[UserOrder alloc] init];
-//    
-//    [sharedRepository.activeOrdersArray addObject:[fakeOrder1 initWithRandomData]];
-//    [sharedRepository.activeOrdersArray addObject:[fakeOrder2 initWithRandomData]];
-//    [sharedRepository.activeOrdersArray addObject:[fakeOrder3 initWithRandomData]];
-//    
-//    sharedRepository.loginURL = @"iOSLogin";
-//    sharedRepository.logoutURL = @"iOSLogout";
-//    sharedRepository.createOrderURL = @"iOSCreateOrder";
     
     sharedRepository.debugModeActive = TRUE;
     

@@ -7,7 +7,7 @@
 //
 
 #import "LoginViewController.h"
-#import "MenuTableViewController.h"
+#import "MainMenuTableViewController.h"
 #import "KioskGreetingViewController.h"
 #import "WebServiceManager.h"
 #import "DataHold.h"
@@ -139,8 +139,6 @@
                        if(loginManager.responseStatusCode == 200)
                        {
                            [self persistSessionID:[loginManager getDataFromResponseString] andEmail:emailTextField.text];
-                           
-                           [self proceedWithLogin];
                        }
                        else
                        {
@@ -164,18 +162,16 @@
         
         UINavigationController *navController = [storyboard  instantiateViewControllerWithIdentifier:@"menuNavigationController"];
         
-        UIColor *greenColor = sharedRepository.greenColor;
-        
         NSArray *version = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
         if ([[version objectAtIndex:0] intValue] >= 7)
         {
-            [navController.navigationBar setBarTintColor:greenColor];
+            [navController.navigationBar setBarTintColor:sharedRepository.greenColor];
             [navController.navigationBar setTranslucent:NO];
             [navController.navigationBar setTintColor:[UIColor whiteColor]];
         }
         else
         {
-            [navController.navigationBar setTintColor:greenColor];
+            [navController.navigationBar setTintColor:sharedRepository.greenColor];
         }
         
         [UIApplication sharedApplication].delegate.window.rootViewController = navController;
@@ -203,6 +199,11 @@
     [defaults setObject:sessionID forKey:@"userSessionID"];
     [defaults setObject:userEmail forKey:@"userEmail"];
     [defaults synchronize];
+    
+    sharedRepository.userEmail = userEmail;
+    sharedRepository.sessionID = sessionID;
+    
+    [self proceedWithLogin];
 }
 
 - (void)startLoginActivityIndicator

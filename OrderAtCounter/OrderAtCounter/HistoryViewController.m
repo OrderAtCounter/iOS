@@ -80,7 +80,10 @@
                            {
                                [self resetDisplayHistoryArrayToRetrievedData];
                                
-                               [self performSelectorOnMainThread:@selector(updateHistoryTableView) withObject:nil waitUntilDone:NO];
+                               if(!historySearchBar.isFirstResponder)
+                               {
+                                   [self performSelectorOnMainThread:@selector(updateHistoryTableView) withObject:nil waitUntilDone:NO];
+                               }
                            }
                        }
                    });
@@ -90,6 +93,7 @@
 {
     [displayHistoryArray removeAllObjects];
     [displayHistoryArray addObjectsFromArray:sharedRepository.ordersHistoryArray];
+    [self searchBarSearchButtonClicked:historySearchBar];
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView
@@ -150,7 +154,13 @@
     //
     //    NSIndexPath *index = [[activeOrdersTableView indexPathsForVisibleRows] objectAtIndex:0];
     //    NSLog(@"Row: %d", index.row);
-    //    [activeOrdersTableView reloadData];
+    
+    
+    
+    [historyTableView reloadData];
+    
+    
+    
     //    [activeOrdersTableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
@@ -160,7 +170,7 @@
     for(UserOrder *x in sharedRepository.ordersHistoryArray)
     {
         BOOL containsOrderNumber = [x.orderNumber rangeOfString:searchText].location != NSNotFound;
-        BOOL containsPhoneNumber = [x.customerPhoneNumber rangeOfString:searchText].location != NSNotFound;
+        BOOL containsPhoneNumber = [[x.customerPhoneNumber stringByReplacingOccurrencesOfString:@"-" withString:@""] rangeOfString:searchText].location != NSNotFound;
         
         if([searchText isEqualToString:@""] || containsOrderNumber || containsPhoneNumber)
         {
@@ -179,7 +189,13 @@
 
 - (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
 {
+    [self updateHistoryTableView];
     [self dismissSearchBarKeyboard];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    
 }
 
 - (void)dismissSearchBarKeyboard

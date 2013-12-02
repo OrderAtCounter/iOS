@@ -66,6 +66,8 @@
 {
     responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
     dataFinishedLoading = TRUE;
+    
+    
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
@@ -116,12 +118,12 @@
                                                      nil];
     
     NSLog(@"Retrieving Active Orders");
-    //NSLog(@"Email: %@", sharedRepository.userEmail);
-    //NSLog(@"Session: %@", sharedRepository.sessionID);
+    NSLog(@"Email: %@", sharedRepository.userEmail);
+    NSLog(@"Session: %@", sharedRepository.sessionID);
     
     [self generatePostRequestAtRoute:sharedRepository.getOrdersURL withJSONBodyData:retrieveActiveOrdersCredentials];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
                    ^{
                        // All Code within block is executed asynchronously.
                        
@@ -184,12 +186,12 @@
                                                      nil];
     
     NSLog(@"Retrieving Orders History");
-    //NSLog(@"Email: %@", sharedRepository.userEmail);
-    //NSLog(@"Session: %@", sharedRepository.sessionID);
+    NSLog(@"Email: %@", sharedRepository.userEmail);
+    NSLog(@"Session: %@", sharedRepository.sessionID);
     
     [self generatePostRequestAtRoute:sharedRepository.getHistoryURL withJSONBodyData:retrieveActiveOrdersCredentials];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
                    ^{
                        // All Code within block is executed asynchronously.
                        
@@ -233,5 +235,44 @@
                        dataIsReady = FALSE;
                    });
 }
+
+- (void)retrieveDefaultTextMessage
+{
+    if(!sharedRepository)
+    {
+        sharedRepository = [[DataHold alloc] init];
+    }
+    
+    NSDictionary *textMessageCredentials = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                            sharedRepository.userEmail, @"email",
+                                            sharedRepository.sessionID, @"sessionId",
+                                            nil];
+    
+    NSLog(@"Retrieving Default Text Message!");
+    NSLog(@"Email: %@", sharedRepository.userEmail);
+    NSLog(@"Session: %@", sharedRepository.sessionID);
+    
+    [self generatePostRequestAtRoute:sharedRepository.getTextMessageURL withJSONBodyData:textMessageCredentials];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
+                   ^{
+                       while(!dataFinishedLoading)
+                       {
+                           
+                       }
+                       
+                       if(responseStatusCode == 200)
+                       {
+                           NSLog(@"Message Retrieved! %@", responseString);
+                           
+                           sharedRepository.defaultTextMessageString = [responseString substringWithRange:NSMakeRange(12, responseString.length - 14)];
+                       }
+                       else
+                       {
+                           NSLog(@"FAILED TO RETRIEVE CUSTOM MESSAGE!");// %@", responseData);
+                       }
+                   });
+}
+
 
 @end

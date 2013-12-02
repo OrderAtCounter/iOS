@@ -28,5 +28,6 @@
 - (NSString *)getDataFromResponseString;
 - (void)updateActiveOrders;
 - (void)updateOrdersHistory;
+- (void)retrieveDefaultTextMessage;
 
 @end

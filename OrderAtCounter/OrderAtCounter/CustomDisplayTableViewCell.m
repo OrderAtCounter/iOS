@@ -11,6 +11,7 @@
 @implementation CustomDisplayTableViewCell
 
 @synthesize order;
+@synthesize sendTextButton;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -25,6 +26,8 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
+    
+    [sendTextButton setImage:[UIImage imageNamed:@"big-message-red.png"] forState:UIControlStateHighlighted];
 
     // Configure the view for the selected state
 }
