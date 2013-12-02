@@ -104,7 +104,7 @@
         <!--Active Orders View Controller - Active Orders-->
         <scene sceneID="o8g-kJ-1eh">
             <objects>
-                <viewController id="u2u-qE-zHW" customClass="ActiveOrdersViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ActiveOrdersStoryboard" id="u2u-qE-zHW" customClass="ActiveOrdersViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="mJJ-sX-UDM"/>
                         <viewControllerLayoutGuide type="bottom" id="WUh-fZ-ra3"/>
@@ -974,7 +974,7 @@
         <image name="analytics-teal.png" width="60" height="60"/>
         <image name="big-message.png" width="51" height="47"/>
         <image name="history-teal.png" width="60" height="60"/>
-        <image name="little-clock.png" width="25" height="25"/>
+        <image name="little-clock.png" width="27" height="26"/>
         <image name="little-message.png" width="30" height="28"/>
         <image name="little-phone.png" width="16" height="25"/>
         <image name="msg-teal.png" width="60" height="60"/>

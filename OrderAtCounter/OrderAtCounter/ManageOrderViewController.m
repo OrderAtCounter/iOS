@@ -227,6 +227,7 @@
     NSDictionary *editsCredentials = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       sharedRepository.userEmail, @"email",
                                       sharedRepository.sessionID, @"sessionId",
+                                      order.orderId, @"orderId",
                                       editedPhoneNumber, @"phoneNumber",
                                       editOrderNumberTextField.text, @"orderNumber",
                                       editedTextMessage, @"message",
@@ -247,7 +248,8 @@
         editOrder.customTextMessage = editedTextMessage;
     }
     
-    order = editOrder;
+    [sharedRepository.activeOrdersArray removeObject:order];
+    [sharedRepository.activeOrdersArray addObject:editOrder];
     
     [self refreshUIForNonEditMode];
 }

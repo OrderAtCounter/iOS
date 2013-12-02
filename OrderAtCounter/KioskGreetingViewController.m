@@ -17,6 +17,8 @@
 @implementation KioskGreetingViewController
 {
     DataHold *sharedRepository;
+    
+    WebServiceManager *logoutManager;
 }
 
 @synthesize addNewOrderButton;
@@ -32,6 +34,11 @@
     self.navigationController.navigationBar.titleTextAttributes = @{UITextAttributeTextColor : sharedRepository.redColor};
     
     addNewOrderButton.titleLabel.textColor = sharedRepository.greenColor;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newDataLoadedNotificationReceived:) name:@"KioskLogoutService" object:nil];
+    
+    logoutManager = [[WebServiceManager alloc] init];
+    logoutManager.serviceNotificationType = @"KioskLogoutService";
 }
 
 - (void)didReceiveMemoryWarning
@@ -46,8 +53,6 @@
 
 - (void)processUserLogoutAttempt
 {
-    WebServiceManager *logoutManager = [[WebServiceManager alloc] init];
-    
     NSDictionary *logoutCredentials = [[NSDictionary alloc] initWithObjectsAndKeys:
                                        sharedRepository.userEmail, @"email",
                                        sharedRepository.sessionID, @"sessionId",
@@ -55,37 +60,25 @@
     
     [logoutManager generatePostRequestAtRoute:sharedRepository.logoutURL withJSONBodyData:logoutCredentials];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       // All Code within block is executed asynchronously.
-                       
-                       while(!logoutManager.dataFinishedLoading)
-                       {
-                           
-                       }
-                       
-                       NSString *responseString = logoutManager.responseString;
-                       if(logoutManager.responseStatusCode == 200)
-                       {
-                           if(sharedRepository.debugModeActive)
-                           {
-                               NSLog(@"Logout Successful");
-                           }
-                       }
-                       else
-                       {
-                           [self indicateLogoutAttemptFailure:responseString];
-                       }
-                       
-                       
-                   });
-    
     [self performLogoutOperation];
 }
 
-- (void)indicateLogoutAttemptFailure:(NSString *)errorString
+- (void)newDataLoadedNotificationReceived:(NSNotification *)notification
 {
-    NSLog(@"Failure To Logout! >>> %@", errorString);
+    if([[notification name] isEqualToString:@"KioskLogoutService"])
+    {
+        if(logoutManager.responseStatusCode == 200)
+        {
+            if(sharedRepository.debugModeActive)
+            {
+                NSLog(@"Logout Successful");
+            }
+        }
+        else
+        {
+            NSLog(@"Failure to Logout! %@", logoutManager.responseString);
+        }
+    }
 }
 
 - (void)performLogoutOperation

@@ -17,6 +17,8 @@
 @implementation DefaultTextMessageViewController
 {
     DataHold *sharedRepository;
+    
+    WebServiceManager *updateMessageManager;
 }
 
 @synthesize customMessageTextView;
@@ -28,6 +30,11 @@
     sharedRepository = [[DataHold alloc] init];
     
     customMessageTextView.text = sharedRepository.defaultTextMessageString;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newDataLoadedNotificationReceived:) name:@"MessageUpdateService" object:nil];
+    
+    updateMessageManager = [[WebServiceManager alloc] init];
+    updateMessageManager.serviceNotificationType = @"MessageUpdateService";
 }
 
 - (IBAction)cancelButtonPressed:(id)sender
@@ -43,9 +50,6 @@
 
 - (void)processMessageUpdateRequest
 {
-    WebServiceManager *updateMessageManager = [[WebServiceManager alloc] init];
-    
-    // (email, sessionId, message)
     NSDictionary *orderCredentials = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       sharedRepository.userEmail, @"email",
                                       sharedRepository.sessionID, @"sessionId",
@@ -57,31 +61,24 @@
     
     [updateMessageManager generatePostRequestAtRoute:sharedRepository.updateTextMessageURL withJSONBodyData:orderCredentials];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       while(!updateMessageManager.dataFinishedLoading)
-                       {
-                           
-                       }
-                       
-                       if(updateMessageManager.responseStatusCode == 200)
-                       {
-                           NSLog(@"Message Updated! %@", updateMessageManager.responseString);
-                       }
-                       else
-                       {
-                           [self indicateUpdateMessageAttemptFailure:updateMessageManager.responseString];
-                       }
-                   });
-    
     sharedRepository.defaultTextMessageString = customMessageTextView.text;
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)indicateUpdateMessageAttemptFailure:(NSString *)errorString
+- (void)newDataLoadedNotificationReceived:(NSNotification *)notification
 {
-    NSLog(@"Failure To Place Order! >>> %@", errorString);
+    if([[notification name] isEqualToString:@"MessageUpdateService"])
+    {
+        if(updateMessageManager.responseStatusCode == 200)
+        {
+            NSLog(@"Message Updated!");
+        }
+        else
+        {
+            NSLog(@"Failure to Update Default Text Message! %@", updateMessageManager.responseString);
+        }
+    }
 }
 
 @end

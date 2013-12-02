@@ -13,7 +13,6 @@
 		1A1AA87F183E32CC00EEC517 /* SettingsSelectionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1AA87E183E32CC00EEC517 /* SettingsSelectionTableViewController.m */; };
 		1A1AA887184286B100EEC517 /* big-add.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A1AA880184286B100EEC517 /* big-add.png */; };
 		1A1AA888184286B100EEC517 /* big-message.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A1AA881184286B100EEC517 /* big-message.png */; };
-		1A1AA889184286B100EEC517 /* little-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A1AA882184286B100EEC517 /* little-clock.png */; };
 		1A1AA88B184286B100EEC517 /* little-phone.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A1AA884184286B100EEC517 /* little-phone.png */; };
 		1A1AA88C184286B100EEC517 /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A1AA885184286B100EEC517 /* menu.png */; };
 		1A1AA88D184286B100EEC517 /* plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A1AA886184286B100EEC517 /* plus.png */; };
@@ -24,6 +23,8 @@
 		1AA34D55184C5D980037C45A /* MontserratBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AA34D53184C5D980037C45A /* MontserratBold.ttf */; };
 		1AA34D56184C5D980037C45A /* MontserratRegular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1AA34D54184C5D980037C45A /* MontserratRegular.ttf */; };
 		1AA34D58184C95730037C45A /* big-message-red.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AA34D57184C95730037C45A /* big-message-red.png */; };
+		1AA34D5D184CF4000037C45A /* little-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AA34D5C184CF4000037C45A /* little-clock.png */; };
+		1AA34D5F184CF8390037C45A /* grey-aesthetic-bar.png in Resources */ = {isa = PBXBuildFile; fileRef = 1AA34D5E184CF8390037C45A /* grey-aesthetic-bar.png */; };
 		1AB46E4017EAC477003AD29E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AB46E3F17EAC477003AD29E /* UIKit.framework */; };
 		1AB46E4217EAC477003AD29E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AB46E4117EAC477003AD29E /* Foundation.framework */; };
 		1AB46E4417EAC477003AD29E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AB46E4317EAC477003AD29E /* CoreGraphics.framework */; };
@@ -94,7 +95,6 @@
 		1A1AA87E183E32CC00EEC517 /* SettingsSelectionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsSelectionTableViewController.m; sourceTree = "<group>"; };
 		1A1AA880184286B100EEC517 /* big-add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "big-add.png"; sourceTree = "<group>"; };
 		1A1AA881184286B100EEC517 /* big-message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "big-message.png"; sourceTree = "<group>"; };
-		1A1AA882184286B100EEC517 /* little-clock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "little-clock.png"; sourceTree = "<group>"; };
 		1A1AA884184286B100EEC517 /* little-phone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "little-phone.png"; sourceTree = "<group>"; };
 		1A1AA885184286B100EEC517 /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
 		1A1AA886184286B100EEC517 /* plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plus.png; sourceTree = "<group>"; };
@@ -107,6 +107,8 @@
 		1AA34D53184C5D980037C45A /* MontserratBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MontserratBold.ttf; sourceTree = "<group>"; };
 		1AA34D54184C5D980037C45A /* MontserratRegular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MontserratRegular.ttf; sourceTree = "<group>"; };
 		1AA34D57184C95730037C45A /* big-message-red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "big-message-red.png"; sourceTree = "<group>"; };
+		1AA34D5C184CF4000037C45A /* little-clock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "little-clock.png"; sourceTree = "<group>"; };
+		1AA34D5E184CF8390037C45A /* grey-aesthetic-bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grey-aesthetic-bar.png"; sourceTree = "<group>"; };
 		1AB46E3C17EAC477003AD29E /* Ready.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ready.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AB46E3F17EAC477003AD29E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1AB46E4117EAC477003AD29E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -253,7 +255,7 @@
 			isa = PBXGroup;
 			children = (
 				1AEE013C184C098300FA0684 /* little-message.png */,
-				1A1AA882184286B100EEC517 /* little-clock.png */,
+				1AA34D5C184CF4000037C45A /* little-clock.png */,
 				1A1AA884184286B100EEC517 /* little-phone.png */,
 			);
 			name = "Little Icons";
@@ -438,6 +440,7 @@
 				1AEE0147184C321A00FA0684 /* 8.png */,
 				1AEE0148184C321A00FA0684 /* 9.png */,
 				1AEE0149184C321A00FA0684 /* kiosk.png */,
+				1AA34D5E184CF8390037C45A /* grey-aesthetic-bar.png */,
 				1AEE015B184C32C400FA0684 /* green-aesthetic-bar.png */,
 				1AEE014A184C321A00FA0684 /* let-us-send-you.png */,
 				1AEE014B184C321A00FA0684 /* send-text-message-border.png */,
@@ -533,6 +536,7 @@
 				1A1AA893184505F500EEC517 /* Launch-Icon.png in Resources */,
 				1AEE0139184C095B00FA0684 /* msg-white.png in Resources */,
 				1AA34D58184C95730037C45A /* big-message-red.png in Resources */,
+				1AA34D5F184CF8390037C45A /* grey-aesthetic-bar.png in Resources */,
 				1AEE0153184C321A00FA0684 /* 6.png in Resources */,
 				1AEE013D184C098300FA0684 /* little-message.png in Resources */,
 				1AB46E5417EAC477003AD29E /* Default@2x.png in Resources */,
@@ -556,6 +560,7 @@
 				1AEE0156184C321A00FA0684 /* 9.png in Resources */,
 				1A1AA88D184286B100EEC517 /* plus.png in Resources */,
 				1AA34D56184C5D980037C45A /* MontserratRegular.ttf in Resources */,
+				1AA34D5D184CF4000037C45A /* little-clock.png in Resources */,
 				1AEE0133184C095B00FA0684 /* Add-New-Order-To-Get-Started-Image.png in Resources */,
 				1AEE0154184C321A00FA0684 /* 7.png in Resources */,
 				1AEE013A184C095B00FA0684 /* settings-teal.png in Resources */,
@@ -566,7 +571,6 @@
 				1AEE0135184C095B00FA0684 /* analytics-white.png in Resources */,
 				1AB46E7117EACAFF003AD29E /* counter_logo_by_chokorroll-d3d7prd.jpg in Resources */,
 				1AE6E2F817F38DA8004BF4F3 /* orderInfoTopBackground.png in Resources */,
-				1A1AA889184286B100EEC517 /* little-clock.png in Resources */,
 				1AC2E44A1848D3B900A3028C /* TWTSideMenuViewController in Resources */,
 				1AEE013B184C095B00FA0684 /* settings-white.png in Resources */,
 				1AE6E2F917F38DA8004BF4F3 /* orderSendTextBackground.png in Resources */,
