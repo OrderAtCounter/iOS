@@ -17,6 +17,7 @@
 @implementation SettingsSelectionTableViewController
 {
     DataHold *sharedRepository;
+    WebServiceManager *textMessageManager;
 }
 
 @synthesize settingsTableView;
@@ -30,7 +31,15 @@
     
     settingsTableView.tableFooterView = [UIView new];
     
-    [self updateCustomTextMessage];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newDataLoadedNotificationReceived:) name:@"RetrieveDefaultTextMessageService" object:nil];
+    
+    textMessageManager = [[WebServiceManager alloc] init];
+    textMessageManager.serviceNotificationType = @"RetrieveDefaultTextMessageService";
+    
+    if(!sharedRepository.defaultTextMessageString)
+    {
+        [textMessageManager retrieveDefaultTextMessage];
+    }
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView
@@ -50,39 +59,32 @@
     return cellHeight;
 }
 
-- (void)updateCustomTextMessage
+- (void)newDataLoadedNotificationReceived:(NSNotification *)notification
 {
-    WebServiceManager *textMessageManager = [[WebServiceManager alloc] init];
-    
-    NSDictionary *textMessageCredentials = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                           sharedRepository.userEmail, @"email",
-                                           sharedRepository.sessionID, @"sessionId",
-                                           nil];
-    
-    [textMessageManager generatePostRequestAtRoute:sharedRepository.getTextMessageURL withJSONBodyData:textMessageCredentials];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       while(!textMessageManager.dataFinishedLoading)
-                       {
-                           
-                       }
-                       
-                       NSString *responseString = textMessageManager.responseString;
-                       if(textMessageManager.responseStatusCode == 200)
-                       {
-                           sharedRepository.defaultTextMessageString = [responseString substringWithRange:NSMakeRange(12, responseString.length - 14)];
-                       }
-                       else
-                       {
-                           [self indicateTextMessageRetrievalFailure:responseString];
-                       }
-                   });
+    if([[notification name] isEqualToString:@"RetrieveDefaultTextMessageService"])
+    {
+        NSLog(@"DEFAULT TEXT MESSAGE RETRIEVED");
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
+                       ^{
+                           [self parseResponseData];
+                       });
+    }
 }
 
-- (void)indicateTextMessageRetrievalFailure:(NSString *)errorString
+- (void)parseResponseData
 {
-    NSLog(@"Failure To Retrieve Custom Text Message! >>> %@", errorString);
+    if(textMessageManager.responseStatusCode == 200)
+    {
+        NSLog(@"Message Retrieved! %@", textMessageManager.responseString);
+        
+        NSString *rawString = textMessageManager.responseString;
+        sharedRepository.defaultTextMessageString = [rawString substringWithRange:NSMakeRange(12, rawString.length - 14)];
+    }
+    else
+    {
+        NSLog(@"FAILED TO RETRIEVE DEFAULT MESSAGE!");// %@", responseData);
+    }
 }
 
 @end

@@ -19,6 +19,7 @@
 @implementation LoginViewController
 {
     DataHold *sharedRepository;
+    WebServiceManager *loginManager;
 }
 
 @synthesize customerLogoImageView, emailTextField, passwordTextField, loginActivityIndicator, loginButton;
@@ -49,6 +50,11 @@
         sharedRepository.userEmail = userEmail;
         [self proceedWithLogin];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newDataLoadedNotificationReceived:) name:@"LoginService" object:nil];
+    
+    loginManager = [[WebServiceManager alloc] init];
+    loginManager.serviceNotificationType = @"LoginService";
 }
 
 - (void)didReceiveMemoryWarning
@@ -117,41 +123,29 @@
 {
     [self startLoginActivityIndicator];
     
-    WebServiceManager *loginManager = [[WebServiceManager alloc] init];
-    
     NSDictionary *userCredentials = [[NSDictionary alloc] initWithObjectsAndKeys:
                                      emailTextField.text, @"email",
                                      passwordTextField.text, @"password",
                                      nil];
     
     [loginManager generatePostRequestAtRoute:sharedRepository.loginURL withJSONBodyData:userCredentials];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       // All Code within block is executed asynchronously.
-                       
-                       while(!loginManager.dataFinishedLoading)
-                       {
-                           
-                       }
-                       
-                       NSString *responseString = loginManager.responseString;
-                       if(loginManager.responseStatusCode == 200)
-                       {
-                           [self persistSessionID:[loginManager getDataFromResponseString] andEmail:emailTextField.text];
-                       }
-                       else
-                       {
-                           [self indicateLoginAttemptFailure:responseString];
-                       }
-                       
-                       [self stopLoginActivityIndicator];
-                       
-                       if(sharedRepository.debugModeActive)
-                       {
-                           
-                       }
-                   });
+}
+
+- (void)newDataLoadedNotificationReceived:(NSNotification *)notification
+{
+    if([[notification name] isEqualToString:@"LoginService"])
+    {
+        if(loginManager.responseStatusCode == 200)
+        {
+            [self persistSessionID:[loginManager getDataFromResponseString] andEmail:emailTextField.text];
+        }
+        else
+        {
+            [self indicateLoginAttemptFailure:loginManager.responseString];
+        }
+        
+        [self stopLoginActivityIndicator];
+    }
 }
 
 - (void)proceedWithLogin

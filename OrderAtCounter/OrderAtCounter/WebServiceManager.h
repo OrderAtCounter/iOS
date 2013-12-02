@@ -15,12 +15,15 @@
     NSString *responseString;
     BOOL dataFinishedLoading;
     BOOL dataIsReady;
+    
+    NSString *serviceNotificationType;
 }
 
 @property int responseStatusCode;
 @property NSMutableData *responseData;
 @property NSString *responseString;
 @property BOOL dataFinishedLoading, dataIsReady;
+@property NSString *serviceNotificationType;
 
 - (void)generatePostRequestAtRoute:(NSString *)route withJSONBodyData:(NSDictionary *)bodyData;
 - (void)generateGetRequestAtRoute:(NSString *)route withJSONBodyData:(NSDictionary *)bodyData;

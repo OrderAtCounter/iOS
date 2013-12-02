@@ -26,6 +26,8 @@
     [super viewDidLoad];
     
     sharedRepository = [[DataHold alloc] init];
+    
+    customMessageTextView.text = sharedRepository.defaultTextMessageString;
 }
 
 - (IBAction)cancelButtonPressed:(id)sender
@@ -64,7 +66,7 @@
                        
                        if(updateMessageManager.responseStatusCode == 200)
                        {
-                           
+                           NSLog(@"Message Updated! %@", updateMessageManager.responseString);
                        }
                        else
                        {

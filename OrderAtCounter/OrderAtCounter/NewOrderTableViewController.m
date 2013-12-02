@@ -18,6 +18,7 @@
 @implementation NewOrderTableViewController
 {
     DataHold *sharedRepository;
+    WebServiceManager *createOrderManager;
 }
 
 @synthesize addNewOrderTableView, orderNumberTextField, phoneNumberTextField;
@@ -33,6 +34,11 @@
     addNewOrderTableView.tableFooterView = [UIView new];
     
     [orderNumberTextField becomeFirstResponder];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newDataLoadedNotificationReceived:) name:@"CreateOrderService" object:nil];
+    
+    createOrderManager = [[WebServiceManager alloc] init];
+    createOrderManager.serviceNotificationType = @"CreateOrderService";
 }
 
 - (void)recolorStatusAndNavigatioNBars
@@ -90,8 +96,6 @@
 
 - (void)processPlaceOrderRequest
 {
-    WebServiceManager *createOrderManager = [[WebServiceManager alloc] init];
-    
     NSDictionary *orderCredentials = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       sharedRepository.userEmail, @"email",
                                       sharedRepository.sessionID, @"sessionId",
@@ -104,27 +108,6 @@
     
     [createOrderManager generatePostRequestAtRoute:sharedRepository.createOrderURL withJSONBodyData:orderCredentials];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       while(!createOrderManager.dataFinishedLoading)
-                       {
-                           
-                       }
-                       
-                       NSString *responseString = createOrderManager.responseString;
-                       if(createOrderManager.responseStatusCode == 200)
-                       {
-                           if(sharedRepository.debugModeActive)
-                           {
-                               NSLog(@"Order Placed! %@", responseString);
-                           }
-                       }
-                       else
-                       {
-                           [self indicateOrderPlacementAttemptFailure:responseString];
-                       }
-                   });
-    
     UserOrder *newOrder = [[UserOrder alloc] init];
     newOrder.orderNumber = orderNumberTextField.text;
     newOrder.customerPhoneNumber = phoneNumberTextField.text;
@@ -133,6 +116,24 @@
     [sharedRepository.activeOrdersArray addObject:newOrder];
     
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)newDataLoadedNotificationReceived:(NSNotification *)notification
+{
+    if([[notification name] isEqualToString:@"CreateOrderService"])
+    {
+        if(createOrderManager.responseStatusCode == 200)
+        {
+            if(sharedRepository.debugModeActive)
+            {
+                NSLog(@"Order Placed! %@", createOrderManager.responseString);
+            }
+        }
+        else
+        {
+            [self indicateOrderPlacementAttemptFailure:createOrderManager.responseString];
+        }
+    }
 }
 
 - (void)indicateOrderPlacementAttemptFailure:(NSString *)errorString

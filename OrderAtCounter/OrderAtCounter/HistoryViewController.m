@@ -22,6 +22,7 @@
     NSMutableArray *displayHistoryArray;
     NSTimer *historyTimer;
     UITapGestureRecognizer *exteriorTap;
+    WebServiceManager *updateHistoryManager;
 }
 
 @synthesize historyTableView;
@@ -51,6 +52,11 @@
     [historyTableView setAllowsSelection:TRUE];
     
     historyTableView.tableFooterView = [UIView new];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newDataLoadedNotificationReceived:) name:@"OrderHistoryService" object:nil];
+    
+    updateHistoryManager = [[WebServiceManager alloc] init];
+    updateHistoryManager.serviceNotificationType = @"OrderHistoryService";
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -67,33 +73,68 @@
 - (void)initializeHistoryUpdateTimer
 {
     // Start Background Timer to Update Active Orders
-    WebServiceManager *updateHistoryManager = [[WebServiceManager alloc] init];
     historyTimer = [NSTimer timerWithTimeInterval:8 target:updateHistoryManager selector:@selector(updateOrdersHistory:) userInfo:nil repeats:YES];
     
     [[NSRunLoop mainRunLoop] addTimer:historyTimer forMode:NSRunLoopCommonModes];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
-                   ^{
-                       while(historyTimer.isValid)
-                       {
-                           if(updateHistoryManager.dataIsReady)
+}
+
+- (void)newDataLoadedNotificationReceived:(NSNotification *)notification
+{
+    if([[notification name] isEqualToString:@"OrderHistoryService"])
+    {
+        NSLog(@"NEW ORDER HISTORY LOADED");
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
+                       ^{
+                           [self parseResponseData];
+                           
+                           [self resetDisplayHistoryArrayToRetrievedData];
+                           
+                           if(!historySearchBar.isFirstResponder)
                            {
-                               [self resetDisplayHistoryArrayToRetrievedData];
-                               
-                               if(!historySearchBar.isFirstResponder)
-                               {
-                                   [self performSelectorOnMainThread:@selector(updateHistoryTableView) withObject:nil waitUntilDone:NO];
-                               }
+                               [self performSelectorOnMainThread:@selector(updateHistoryTableView) withObject:nil waitUntilDone:NO];
                            }
-                       }
-                   });
+                       });
+    }
+}
+
+- (void)parseResponseData
+{
+    if(updateHistoryManager.responseStatusCode == 200)
+    {
+        if(sharedRepository.debugModeActive)
+        {
+            NSLog(@"History Retrieved! %@", updateHistoryManager.responseString);
+        }
+        
+        [sharedRepository.ordersHistoryArray removeAllObjects];
+        
+        NSError *error;
+        NSArray *jsonHistoryArray = [NSJSONSerialization JSONObjectWithData:updateHistoryManager.responseData options:0 error:&error];
+        
+        for(NSDictionary *x in jsonHistoryArray)
+        {
+            UserOrder *fulfilledOrder = [[UserOrder alloc] init];
+            
+            fulfilledOrder.orderNumber = [[x objectForKey:@"orderNumber"] stringValue];
+            fulfilledOrder.orderId = [x objectForKey:@"_id"];
+            fulfilledOrder.customerPhoneNumber = [x objectForKey:@"phoneNumber"];
+            fulfilledOrder.placementTime = [x objectForKey:@"timestamp"];
+            fulfilledOrder.orderFulfilled = FALSE;
+            
+            [sharedRepository.ordersHistoryArray addObject:fulfilledOrder];
+        }
+    }
+    else
+    {
+        NSLog(@"FAILED TO RETRIEVE ORDER HISTORY!");// %@", responseData);
+    }
 }
 
 - (void)resetDisplayHistoryArrayToRetrievedData
 {
     [displayHistoryArray removeAllObjects];
     [displayHistoryArray addObjectsFromArray:sharedRepository.ordersHistoryArray];
-    [self searchBarSearchButtonClicked:historySearchBar];
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView

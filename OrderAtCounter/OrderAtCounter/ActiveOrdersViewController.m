@@ -23,6 +23,8 @@
     NSMutableArray *displayOrdersArray;
     NSTimer *updateTimer;
     UITapGestureRecognizer *exteriorTap;
+    WebServiceManager *updateActiveOrdersManager;
+    WebServiceManager *fulfillOrderManager;
 }
 
 @synthesize activeOrdersTableView;
@@ -63,6 +65,16 @@
     [activeOrdersTableView setAllowsSelection:TRUE];
     
     activeOrdersTableView.tableFooterView = [UIView new];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newDataLoadedNotificationReceived:) name:@"ActiveOrderService" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newDataLoadedNotificationReceived:) name:@"FulfillOrderService" object:nil];
+    
+    updateActiveOrdersManager = [[WebServiceManager alloc] init];
+    updateActiveOrdersManager.serviceNotificationType = @"ActiveOrderService";
+    
+    fulfillOrderManager = [[WebServiceManager alloc] init];
+    fulfillOrderManager.serviceNotificationType = @"FulfillOrderService";
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -101,31 +113,75 @@
 - (void)initializeActiveOrderUpdateTimer
 {
     // Start Background Timer to Update Active Orders
-    WebServiceManager *updateActiveOrdersManager = [[WebServiceManager alloc] init];
     updateTimer = [NSTimer timerWithTimeInterval:8 target:updateActiveOrdersManager selector:@selector(updateActiveOrders:) userInfo:nil repeats:YES];
     
     [[NSRunLoop mainRunLoop] addTimer:updateTimer forMode:NSRunLoopCommonModes];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
-                   ^{
-                       while(updateTimer.isValid)
-                       {
-                           if(updateActiveOrdersManager.dataIsReady)
-                           {
-                               [self resetDisplayOrdersArrayToRetrievedData];
-                               
-                               if(!activeOrdersSearchBar.isFirstResponder)
-                               {
-                                   [self performSelectorOnMainThread:@selector(updateActiveOrdersTableView) withObject:nil waitUntilDone:NO];
-                               }
-                           }
-                       }
-                   });
 }
 
-- (void)connectionHasCompletedAlert
+- (void)newDataLoadedNotificationReceived:(NSNotification *)notification
 {
-    
+    if([[notification name] isEqualToString:@"ActiveOrderService"])
+    {
+        NSLog(@"NEW ACTIVE ORDERS LOADED");
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
+                       ^{
+                           [self parseResponseData];
+                           
+                           [self resetDisplayOrdersArrayToRetrievedData];
+                           
+                           if(!activeOrdersSearchBar.isFirstResponder)
+                           {
+                               [self performSelectorOnMainThread:@selector(updateActiveOrdersTableView) withObject:nil waitUntilDone:NO];
+                           }
+                       });
+    }
+    else if([[notification name] isEqualToString:@"FulfillOrderService"])
+    {
+        if(fulfillOrderManager.responseStatusCode == 200)
+        {
+            NSLog(@"Order Fulfilled! %@", fulfillOrderManager.responseString);
+        }
+        else
+        {
+            NSLog(@"Failed To Fulfill Order! %@", fulfillOrderManager.responseString);
+        }
+        
+        [self updateActiveOrdersTableView];
+    }
+}
+
+- (void)parseResponseData
+{
+    if(updateActiveOrdersManager.responseStatusCode == 200)
+    {
+        if(sharedRepository.debugModeActive)
+        {
+            NSLog(@"Active Orders Retrieved! %@", updateActiveOrdersManager.responseString);
+        }
+        
+        [sharedRepository.activeOrdersArray removeAllObjects];
+        
+        NSError *error;
+        NSArray *jsonOrdersArray = [NSJSONSerialization JSONObjectWithData:updateActiveOrdersManager.responseData options:0 error:&error];
+        
+        for(NSDictionary *x in jsonOrdersArray)
+        {
+            UserOrder *activeOrder = [[UserOrder alloc] init];
+            
+            activeOrder.orderNumber = [[x objectForKey:@"orderNumber"] stringValue];
+            activeOrder.orderId = [x objectForKey:@"_id"];
+            activeOrder.customerPhoneNumber = [x objectForKey:@"phoneNumber"];
+            activeOrder.placementTime = [x objectForKey:@"timestamp"];
+            activeOrder.orderFulfilled = FALSE;
+            
+            [sharedRepository.activeOrdersArray addObject:activeOrder];
+        }
+    }
+    else
+    {
+        NSLog(@"FAILED TO RETRIEVE ACTIVE ORDERS!");// %@", responseData);
+    }
 }
 
 - (void)resetDisplayOrdersArrayToRetrievedData
@@ -195,9 +251,17 @@
         {
             cell.sendTextButton.enabled = FALSE;
         }
+        
+        if(order.orderFulfilled)
+        {
+            cell.orderNumberLabel.textColor = sharedRepository.greenColor;
+        }
+        else
+        {
+            cell.orderNumberLabel.textColor = [UIColor blackColor];
+        }
 
         cell.order = order;
-
         cell.orderNumberLabel.text = order.orderNumber;
         cell.phoneNumberLabel.text = [order retrieveFormattedPhoneNumber];
         cell.timePlacementLabel.text = order.placementTime;
@@ -247,8 +311,7 @@
     CustomDisplayTableViewCell *cell = ((CustomDisplayTableViewCell *)[activeOrdersTableView cellForRowAtIndexPath:indexPath]);
     
     UserOrder *orderToFulfill = cell.order;
-    
-    WebServiceManager *fulfillOrderManager = [[WebServiceManager alloc] init];
+    orderToFulfill.orderFulfilled = TRUE;
     
     NSDictionary *fulfillOrderCredentials = [[NSDictionary alloc] initWithObjectsAndKeys:
                                         sharedRepository.userEmail, @"email",
@@ -257,36 +320,6 @@
                                         nil];
     
     [fulfillOrderManager generatePostRequestAtRoute:sharedRepository.fulfillOrderURL withJSONBodyData:fulfillOrderCredentials];
-    
-    [sharedRepository.activeOrdersArray removeObject:orderToFulfill];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       // All Code within block is executed asynchronously.
-                       
-                       while(!fulfillOrderManager.dataFinishedLoading)
-                       {
-                           
-                       }
-                       
-                       NSString *responseString = fulfillOrderManager.responseString;
-                       if(fulfillOrderManager.responseStatusCode == 200)
-                       {
-                           NSLog(@"Order Fulfilled! %@", responseString);
-                       }
-                       else
-                       {
-                           [sharedRepository.activeOrdersArray addObject:orderToFulfill];
-                           [self indicateFulfillOrderFailure:responseString];
-                       }
-                       
-                       if(sharedRepository.debugModeActive)
-                       {
-                           
-                       }
-                       
-                       [self updateActiveOrdersTableView];
-                   });
     
     [sharedRepository.activeOrdersArray removeObject:orderToFulfill];
     

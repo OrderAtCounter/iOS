@@ -18,6 +18,7 @@
 {
     DataHold *sharedRepository;
     UITextField *currentlyEditingTextField;
+    WebServiceManager *createOrderManager;
 }
 
 @synthesize navBar, orderNumberTextField, phoneNumberTextField;
@@ -54,6 +55,11 @@
     //phoneNumberTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     
     [orderNumberTextField isFirstResponder];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newDataLoadedNotificationReceived:) name:@"KioskNewOrderService" object:nil];
+    
+    createOrderManager = [[WebServiceManager alloc] init];
+    createOrderManager.serviceNotificationType = @"KioskNewOrderService";
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
@@ -153,8 +159,6 @@
 
 - (void)processPlaceOrderRequest
 {
-    WebServiceManager *createOrderManager = [[WebServiceManager alloc] init];
-    
     NSDictionary *orderCredentials = [[NSDictionary alloc] initWithObjectsAndKeys:
                                       sharedRepository.userEmail, @"email",
                                       sharedRepository.sessionID, @"sessionId",
@@ -167,33 +171,25 @@
     
     [createOrderManager generatePostRequestAtRoute:sharedRepository.createOrderURL withJSONBodyData:orderCredentials];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       while(!createOrderManager.dataFinishedLoading)
-                       {
-                           
-                       }
-                       
-                       NSString *responseString = createOrderManager.responseString;
-                       if(createOrderManager.responseStatusCode == 200)
-                       {
-                           if(sharedRepository.debugModeActive)
-                           {
-                               NSLog(@"Order Placed! %@", responseString);
-                           }
-                       }
-                       else
-                       {
-                           [self indicateOrderPlacementAttemptFailure:responseString];
-                       }
-                   });
-    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)indicateOrderPlacementAttemptFailure:(NSString *)errorString
+- (void)newDataLoadedNotificationReceived:(NSNotification *)notification
 {
-    NSLog(@"Failure To Place Order! >>> %@", errorString);
+    if([[notification name] isEqualToString:@"KioskNewOrderService"])
+    {
+        if(createOrderManager.responseStatusCode == 200)
+        {
+            if(sharedRepository.debugModeActive)
+            {
+                NSLog(@"Order Placed! %@", createOrderManager.responseString);
+            }
+        }
+        else
+        {
+            NSLog(@"Could Not Place Order! %@", createOrderManager.responseString);
+        }
+    }
 }
 
 @end

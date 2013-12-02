@@ -15,6 +15,7 @@
     DataHold *sharedRepository;
 }
 
+@synthesize serviceNotificationType;
 @synthesize responseStatusCode, responseData, responseString, dataFinishedLoading, dataIsReady;
 
 - (void)generatePostRequestAtRoute:(NSString *)route withJSONBodyData:(NSDictionary *)bodyData
@@ -67,7 +68,10 @@
     responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
     dataFinishedLoading = TRUE;
     
-    
+    if(serviceNotificationType)
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:serviceNotificationType object:self];
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
@@ -123,49 +127,49 @@
     
     [self generatePostRequestAtRoute:sharedRepository.getOrdersURL withJSONBodyData:retrieveActiveOrdersCredentials];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       // All Code within block is executed asynchronously.
-                       
-                       while(!dataFinishedLoading)
-                       {
-                           
-                       }
-                       
-                       if(responseStatusCode == 200)
-                       {
-                           if(sharedRepository.debugModeActive)
-                           {
-                               NSLog(@"Active Orders Retrieved! %@", responseString);
-                           }
-                           
-                           [sharedRepository.activeOrdersArray removeAllObjects];
-                           
-                           NSError *error;
-                           NSArray *jsonOrdersArray = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
-                           
-                           for(NSDictionary *x in jsonOrdersArray)
-                           {
-                               UserOrder *activeOrder = [[UserOrder alloc] init];
-                               
-                               activeOrder.orderNumber = [[x objectForKey:@"orderNumber"] stringValue];
-                               activeOrder.orderId = [x objectForKey:@"_id"];
-                               activeOrder.customerPhoneNumber = [x objectForKey:@"phoneNumber"];
-                               activeOrder.placementTime = [x objectForKey:@"timestamp"];
-                               activeOrder.orderFulfilled = FALSE;
-                               
-                               [sharedRepository.activeOrdersArray addObject:activeOrder];
-                           }
-                           
-                           dataIsReady = TRUE;
-                       }
-                       else
-                       {
-                           NSLog(@"FAILED TO RETRIEVE ACTIVE ORDERS!");// %@", responseData);
-                       }
-                       
-                       dataIsReady = FALSE;
-                   });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
+//                   ^{
+//                       // All Code within block is executed asynchronously.
+//                       
+//                       while(!dataFinishedLoading)
+//                       {
+//                           
+//                       }
+//                       
+//                       if(responseStatusCode == 200)
+//                       {
+//                           if(sharedRepository.debugModeActive)
+//                           {
+//                               NSLog(@"Active Orders Retrieved! %@", responseString);
+//                           }
+//                           
+//                           [sharedRepository.activeOrdersArray removeAllObjects];
+//                           
+//                           NSError *error;
+//                           NSArray *jsonOrdersArray = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
+//                           
+//                           for(NSDictionary *x in jsonOrdersArray)
+//                           {
+//                               UserOrder *activeOrder = [[UserOrder alloc] init];
+//                               
+//                               activeOrder.orderNumber = [[x objectForKey:@"orderNumber"] stringValue];
+//                               activeOrder.orderId = [x objectForKey:@"_id"];
+//                               activeOrder.customerPhoneNumber = [x objectForKey:@"phoneNumber"];
+//                               activeOrder.placementTime = [x objectForKey:@"timestamp"];
+//                               activeOrder.orderFulfilled = FALSE;
+//                               
+//                               [sharedRepository.activeOrdersArray addObject:activeOrder];
+//                           }
+//                           
+//                           dataIsReady = TRUE;
+//                       }
+//                       else
+//                       {
+//                           NSLog(@"FAILED TO RETRIEVE ACTIVE ORDERS!");// %@", responseData);
+//                       }
+//                       
+//                       dataIsReady = FALSE;
+//                   });
 }
 
 - (void)updateOrdersHistory:(NSTimer *)theTimer
@@ -191,49 +195,49 @@
     
     [self generatePostRequestAtRoute:sharedRepository.getHistoryURL withJSONBodyData:retrieveActiveOrdersCredentials];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       // All Code within block is executed asynchronously.
-                       
-                       while(!dataFinishedLoading)
-                       {
-                           
-                       }
-                       
-                       if(responseStatusCode == 200)
-                       {
-                           if(sharedRepository.debugModeActive)
-                           {
-                               NSLog(@"History Retrieved! %@", responseString);
-                           }
-                           
-                           [sharedRepository.ordersHistoryArray removeAllObjects];
-                           
-                           NSError *error;
-                           NSArray *jsonHistoryArray = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
-                           
-                           for(NSDictionary *x in jsonHistoryArray)
-                           {
-                               UserOrder *fulfilledOrder = [[UserOrder alloc] init];
-                               
-                               fulfilledOrder.orderNumber = [[x objectForKey:@"orderNumber"] stringValue];
-                               fulfilledOrder.orderId = [x objectForKey:@"_id"];
-                               fulfilledOrder.customerPhoneNumber = [x objectForKey:@"phoneNumber"];
-                               fulfilledOrder.placementTime = [x objectForKey:@"timestamp"];
-                               fulfilledOrder.orderFulfilled = FALSE;
-                               
-                               [sharedRepository.ordersHistoryArray addObject:fulfilledOrder];
-                           }
-                           
-                           dataIsReady = TRUE;
-                       }
-                       else
-                       {
-                           NSLog(@"FAILED TO RETRIEVE ORDER HISTORY!");// %@", responseData);
-                       }
-                       
-                       dataIsReady = FALSE;
-                   });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
+//                   ^{
+//                       // All Code within block is executed asynchronously.
+//                       
+//                       while(!dataFinishedLoading)
+//                       {
+//                           
+//                       }
+//                       
+//                       if(responseStatusCode == 200)
+//                       {
+//                           if(sharedRepository.debugModeActive)
+//                           {
+//                               NSLog(@"History Retrieved! %@", responseString);
+//                           }
+//                           
+//                           [sharedRepository.ordersHistoryArray removeAllObjects];
+//                           
+//                           NSError *error;
+//                           NSArray *jsonHistoryArray = [NSJSONSerialization JSONObjectWithData:responseData options:0 error:&error];
+//                           
+//                           for(NSDictionary *x in jsonHistoryArray)
+//                           {
+//                               UserOrder *fulfilledOrder = [[UserOrder alloc] init];
+//                               
+//                               fulfilledOrder.orderNumber = [[x objectForKey:@"orderNumber"] stringValue];
+//                               fulfilledOrder.orderId = [x objectForKey:@"_id"];
+//                               fulfilledOrder.customerPhoneNumber = [x objectForKey:@"phoneNumber"];
+//                               fulfilledOrder.placementTime = [x objectForKey:@"timestamp"];
+//                               fulfilledOrder.orderFulfilled = FALSE;
+//                               
+//                               [sharedRepository.ordersHistoryArray addObject:fulfilledOrder];
+//                           }
+//                           
+//                           dataIsReady = TRUE;
+//                       }
+//                       else
+//                       {
+//                           NSLog(@"FAILED TO RETRIEVE ORDER HISTORY!");// %@", responseData);
+//                       }
+//                       
+//                       dataIsReady = FALSE;
+//                   });
 }
 
 - (void)retrieveDefaultTextMessage
@@ -254,24 +258,24 @@
     
     [self generatePostRequestAtRoute:sharedRepository.getTextMessageURL withJSONBodyData:textMessageCredentials];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       while(!dataFinishedLoading)
-                       {
-                           
-                       }
-                       
-                       if(responseStatusCode == 200)
-                       {
-                           NSLog(@"Message Retrieved! %@", responseString);
-                           
-                           sharedRepository.defaultTextMessageString = [responseString substringWithRange:NSMakeRange(12, responseString.length - 14)];
-                       }
-                       else
-                       {
-                           NSLog(@"FAILED TO RETRIEVE CUSTOM MESSAGE!");// %@", responseData);
-                       }
-                   });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
+//                   ^{
+//                       while(!dataFinishedLoading)
+//                       {
+//                           
+//                       }
+//                       
+//                       if(responseStatusCode == 200)
+//                       {
+//                           NSLog(@"Message Retrieved! %@", responseString);
+//                           
+//                           sharedRepository.defaultTextMessageString = [responseString substringWithRange:NSMakeRange(12, responseString.length - 14)];
+//                       }
+//                       else
+//                       {
+//                           NSLog(@"FAILED TO RETRIEVE CUSTOM MESSAGE!");// %@", responseData);
+//                       }
+//                   });
 }
 
 

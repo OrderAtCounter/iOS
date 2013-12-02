@@ -22,6 +22,9 @@
     UIBarButtonItem *editButton;
     UIBarButtonItem *saveButton;
     UITapGestureRecognizer *exteriorTap;
+    
+    WebServiceManager *saveEditsManager;
+    WebServiceManager *cancelOrderManager;
 }
 
 @synthesize order;
@@ -48,6 +51,16 @@
     saveEditsActivityIndicator.hidden = TRUE;
     
     exteriorTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissSearchBarKeyboard)];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newDataLoadedNotificationReceived:) name:@"SaveOrderEditsService" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newDataLoadedNotificationReceived:) name:@"CancelOrderService" object:nil];
+    
+    saveEditsManager = [[WebServiceManager alloc] init];
+    saveEditsManager.serviceNotificationType = @"SaveOrderEditsService";
+    
+    cancelOrderManager = [[WebServiceManager alloc] init];
+    cancelOrderManager.serviceNotificationType = @"CancelOrderService";
     
     [self refreshUI];
 }
@@ -207,8 +220,6 @@
 
 - (void)saveEditedData
 {
-    WebServiceManager *saveEditsManager = [[WebServiceManager alloc] init];
-    
     NSString *editedPhoneNumber = ((OrderDetailCell *)[orderDetailsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]]).editValueTextField.text;
     
     NSString *editedTextMessage = ((OrderDetailCell *)[orderDetailsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]]).editValueTextField.text;
@@ -223,41 +234,70 @@
     
     [saveEditsManager generatePostRequestAtRoute:sharedRepository.updateOrderURL withJSONBodyData:editsCredentials];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       // All Code within block is executed asynchronously.
-                       
-                       while(!saveEditsManager.dataFinishedLoading)
-                       {
-                           [saveEditsActivityIndicator setHidden:FALSE];
-                           [saveEditsActivityIndicator startAnimating];
-                       }
-                       
-                       [saveEditsActivityIndicator stopAnimating];
-                       [saveEditsActivityIndicator setHidden:TRUE];
-                       
-                       if(saveEditsManager.responseStatusCode == 200)
-                       {
-                           order.orderNumber = editOrderNumberTextField.text;
-                           order.customerPhoneNumber = editedPhoneNumber;
-                       }
-                       else
-                       {
-                           [self indicateUpdateOrderFailure:saveEditsManager.responseString];
-                       }
-                       
-                       if(sharedRepository.debugModeActive)
-                       {
-                           
-                       }
-                   });
+    [saveEditsActivityIndicator setHidden:FALSE];
+    [saveEditsActivityIndicator startAnimating];
+    
+    UserOrder *editOrder = [[UserOrder alloc] init];
+    editOrder.orderNumber = editOrderNumberTextField.text;
+    editOrder.placementTime = order.placementTime;
+    editOrder.customerPhoneNumber = editedPhoneNumber;
     
     if(![editedTextMessage isEqualToString:sharedRepository.defaultTextMessageString])
     {
-        order.customTextMessage = editedTextMessage;
+        editOrder.customTextMessage = editedTextMessage;
     }
     
+    order = editOrder;
+    
     [self refreshUIForNonEditMode];
+}
+
+- (IBAction)cancelOrderButtonPressed:(id)sender
+{
+    NSDictionary *cancelCredentials = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                       sharedRepository.userEmail, @"email",
+                                       sharedRepository.sessionID, @"sessionId",
+                                       order.orderId, @"orderId",
+                                       nil];
+    
+    [cancelOrderManager generatePostRequestAtRoute:sharedRepository.deleteOrderURL withJSONBodyData:cancelCredentials];
+    
+    [sharedRepository.activeOrdersArray removeObject:order];
+    
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)newDataLoadedNotificationReceived:(NSNotification *)notification
+{
+    if([[notification name] isEqualToString:@"SaveOrderEditsService"])
+    {
+        [saveEditsActivityIndicator stopAnimating];
+        [saveEditsActivityIndicator setHidden:TRUE];
+        
+        if(saveEditsManager.responseStatusCode == 200)
+        {
+            NSLog(@"Order Changes Saved Successfully!");
+            NSString *editedPhoneNumber = ((OrderDetailCell *)[orderDetailsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]]).editValueTextField.text;
+            
+            order.orderNumber = editOrderNumberTextField.text;
+            order.customerPhoneNumber = editedPhoneNumber;
+        }
+        else
+        {
+            NSLog(@"Could Not Save Order Changes! %@", saveEditsManager.responseString);
+        }
+    }
+    else if([[notification name] isEqualToString:@"CancelOrderService"])
+    {
+        if(cancelOrderManager.responseStatusCode == 200)
+        {
+            NSLog(@"Order Deleted!");
+        }
+        else
+        {
+            NSLog(@"Failure To Delete Order! %@", cancelOrderManager.responseString);
+        }
+    }
 }
 
 - (void)refreshUIForNonEditMode
@@ -266,57 +306,6 @@
     self.navigationItem.rightBarButtonItem = editButton;
     
     [self refreshUI];
-}
-
-- (void)indicateUpdateOrderFailure:(NSString *)response
-{
-    NSLog(@"Failed to Update User Order! %@", response);
-}
-
-- (IBAction)cancelOrderButtonPressed:(id)sender
-{
-    WebServiceManager *cancelOrderManager = [[WebServiceManager alloc] init];
-    
-    NSDictionary *cancelCredentials = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                      sharedRepository.userEmail, @"email",
-                                      sharedRepository.sessionID, @"sessionId",
-                                      order.orderId, @"orderId",
-                                      nil];
-    
-    [cancelOrderManager generatePostRequestAtRoute:sharedRepository.deleteOrderURL withJSONBodyData:cancelCredentials];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0),
-                   ^{
-                       // All Code within block is executed asynchronously.
-                       
-                       while(!cancelOrderManager.dataFinishedLoading)
-                       {
-                           
-                       }
-                       
-                       if(cancelOrderManager.responseStatusCode == 200)
-                       {
-                           
-                       }
-                       else
-                       {
-                           [self indicateCancelOrderFailure:cancelOrderManager.responseString];
-                       }
-                       
-                       if(sharedRepository.debugModeActive)
-                       {
-                           
-                       }
-                   });
-    
-    [sharedRepository.activeOrdersArray removeObject:order];
-    
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (void)indicateCancelOrderFailure:(NSString *)response
-{
-    NSLog(@"Failed to Cancel User Order! %@", response);
 }
 
 @end
