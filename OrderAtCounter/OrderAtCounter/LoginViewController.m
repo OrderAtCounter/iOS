@@ -150,7 +150,7 @@
 
 - (void)proceedWithLogin
 {
-    if([sharedRepository.deviceType isEqualToString:@"iPhone Simulator"])
+    if([sharedRepository.deviceType isEqualToString:@"iPhone 5"])//@"iPhone Simulator"])
     {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPhone" bundle:nil];
         
