@@ -8,6 +8,7 @@
 
 #import "LoginViewController.h"
 #import "MenuTableViewController.h"
+#import "KioskGreetingViewController.h"
 #import "WebServiceManager.h"
 #import "DataHold.h"
 
@@ -32,6 +33,8 @@
     [self.view addGestureRecognizer:exteriorTap];
     
     self.view.backgroundColor = [UIColor colorWithRed:247.0/255.0f green:247.0/255.0f blue:245.0/255.0f alpha:1.0f];
+    
+    [loginButton setTitleColor:sharedRepository.greenColor forState:UIControlStateNormal];
     
     passwordTextField.secureTextEntry = TRUE;
     
@@ -181,8 +184,9 @@
     {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard_iPad" bundle:nil];
         
-        UISplitViewController *splitViewController = [storyboard instantiateViewControllerWithIdentifier:@"menuTabBarController"];
-        [UIApplication sharedApplication].delegate.window.rootViewController = splitViewController;
+        UINavigationController *navController = [storyboard instantiateViewControllerWithIdentifier:@"mainNavController"];
+        
+        [UIApplication sharedApplication].delegate.window.rootViewController = navController;
     }
 }
 

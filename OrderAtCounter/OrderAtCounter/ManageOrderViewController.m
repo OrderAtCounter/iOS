@@ -119,6 +119,9 @@
     
     cell.detailLabel.textColor = sharedRepository.greenColor;
     
+    [cell.detailLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:15]];
+    [cell.valueLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:20]];
+    
     if(indexPath.row == 0)
     {
         if(isEditMode)
@@ -133,34 +136,17 @@
         cell.detailLabel.text = @"Phone Number";
         cell.valueLabel.text = order.customerPhoneNumber;
         cell.editValueTextField.text = [order.customerPhoneNumber stringByReplacingOccurrencesOfString:@"-" withString:@""];
-        
-        UIImageView *detailImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"little-phone.png"]];
-        detailImageView.frame = CGRectMake(detailImageView.frame.origin.x + 8, detailImageView.frame.origin.y, 16, 25);
-        
-        cell.detailImage = detailImageView;
     }
     else if(indexPath.row == 1)
     {
         cell.detailLabel.text = @"Placement Time";
         cell.valueLabel.text = order.placementTime;
-        
-        UIImageView *detailImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"little-clock.png"]];
-        detailImageView.frame = CGRectMake(detailImageView.frame.origin.x + 12, detailImageView.frame.origin.y, 25, 25);
-        
-        cell.detailImage = detailImageView;
     }
     else if(indexPath.row == 2)
     {
         cell.detailLabel.text = @"Text Message";
         cell.valueLabel.text = @"Your order is ready!";
-        
-        UIImageView *detailImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"little-message.png"]];
-        detailImageView.frame = CGRectMake(detailImageView.frame.origin.x + 12, detailImageView.frame.origin.y, 25, 25);
-        
-        cell.detailImage = detailImageView;
     }
-    
-    [cell.imageView setNeedsDisplay];
     
     return cell;
 }

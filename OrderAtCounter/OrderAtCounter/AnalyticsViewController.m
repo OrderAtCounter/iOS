@@ -100,6 +100,7 @@
 - (IBAction)segmentedControlHasChanged:(id)sender
 {
     [self refreshDateRangeLabel];
+    [self updateRowData];
 }
 
 - (void)refreshDateRangeLabel
@@ -131,6 +132,31 @@
         NSString *currentDay = [rangeDateFormatter stringFromDate:[NSDate date]];
         
         selectedDateRange.text = [NSString stringWithFormat:@"%@ - %@", firstDayOfMonth, currentDay];
+    }
+}
+
+- (void)updateRowData
+{
+    if(analyticsSegmentedControl.selectedSegmentIndex == 0)
+    {
+        numTextsCell.detailTextLabel.text = @"21 texts";
+        mostActiveCell.detailTextLabel.text = @"11AM - 12PM";
+        averageWaitCell.detailTextLabel.text = @"8 minutes";
+        longestWaitCell.detailTextLabel.text=  @"28 minutes";
+    }
+    else if(analyticsSegmentedControl.selectedSegmentIndex == 1)
+    {
+        numTextsCell.detailTextLabel.text = @"32 texts";
+        mostActiveCell.detailTextLabel.text = @"11AM - 12PM";
+        averageWaitCell.detailTextLabel.text = @"7 minutes";
+        longestWaitCell.detailTextLabel.text=  @"28 minutes";
+    }
+    else if(analyticsSegmentedControl.selectedSegmentIndex == 2)
+    {
+        numTextsCell.detailTextLabel.text = @"32 texts";
+        mostActiveCell.detailTextLabel.text = @"11AM - 12PM";
+        averageWaitCell.detailTextLabel.text = @"7 minutes";
+        longestWaitCell.detailTextLabel.text=  @"28 minutes";
     }
 }
 

@@ -18,6 +18,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *detailLabel;
 @property (weak, nonatomic) IBOutlet UILabel *valueLabel;
 @property (weak, nonatomic) IBOutlet UITextField *editValueTextField;
-@property (weak, nonatomic) IBOutlet UIImageView *detailImage;
 
 @end

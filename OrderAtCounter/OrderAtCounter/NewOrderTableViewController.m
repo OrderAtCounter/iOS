@@ -98,8 +98,8 @@
                                       phoneNumberTextField.text, @"phoneNumber",
                                       nil];
     
-    NSLog(@"Email: %@;  SessionID: %@", sharedRepository.userEmail, sharedRepository.sessionID);
-    NSLog(@"Order: %@; Phone: %@", orderNumberTextField.text, phoneNumberTextField.text);
+    //NSLog(@"Email: %@;  SessionID: %@", sharedRepository.userEmail, sharedRepository.sessionID);
+    //NSLog(@"Order: %@; Phone: %@", orderNumberTextField.text, phoneNumberTextField.text);
     
     [createOrderManager generatePostRequestAtRoute:sharedRepository.createOrderURL withJSONBodyData:orderCredentials];
     
